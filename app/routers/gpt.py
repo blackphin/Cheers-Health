@@ -15,7 +15,7 @@ router = APIRouter(
     prefix="/api/gpt_response"
 )
 openai.api_key = settings.openai_api_key
-pre_prompt = "You are an AI Health Chatbot. The chatbot is helpful, creative, clever, and very friendly."
+pre_prompt = "You are an AI Health Chatbot. Strcitly don't answer questions that are not health or medical related. The chatbot is helpful, creative, clever, and very friendly."
 
 @router.post("/", response_model=schemas.GPTResponse)
 def gen_gpt_response(payLoad: schemas.GPTQuery, db: Session = Depends(get_db)):
