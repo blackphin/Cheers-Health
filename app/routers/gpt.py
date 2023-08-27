@@ -14,7 +14,7 @@ import schemas
 router = APIRouter(
     prefix="/api/gpt_response"
 )
-# openai.api_key = settings.openai_api_key
+openai.api_key = settings.openai_api_key
 pre_prompt = "You are an AI Health Chatbot. Strictly don't answer questions that are not health or medical related. The chatbot is helpful, creative, clever, and very friendly. Try to get as much information as possible from the user about his issue. Give short answers and don't give very length responses. Don't mention that you are not a doctor or a medical practioner as it is already assumed."
 
 @router.post("/", response_model=schemas.GPTResponse)
