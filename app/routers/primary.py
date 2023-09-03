@@ -1,6 +1,7 @@
-from fastapi import Depends, status, APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter
 
 from sqlalchemy.orm import Session
+from utils import gen_uuid
 
 from database import get_db, engine
 
@@ -12,14 +13,42 @@ router = APIRouter(
 )
 
 
-@router.get("/", response_model=schemas.GetPrimaryQuestions)
-def get_primary_questions(db: Session = Depends(get_db)):
-    primary_questions = db.query(models.PrimaryQuestions.question_id).all()
-    question_id_list = []
-    for question in primary_questions:
-        question_id_list.append(question.question_id)
+@router.get("/{language}", response_model=schemas.InitialQuestion)
+# @router.get("/", response_model=schemas.GetPrimaryQuestions)
+def get_primary_questions(language:str, db: Session = Depends(get_db)):
 
-    return {"question_ids": question_id_list}
+    # primary_questions = db.query(models.PrimaryQuestions.question_id).all()
+    # question_id_list = []
+    # for question in primary_questions:
+    #     question_id_list.append(question.question_id)
+
+    primary_questions = db.query(models.PrimaryQuestions.question_id).first()
+    question_id = primary_questions.question_id
+
+    journal_id = gen_uuid()
+    if language == "en":
+        question = db.query(models.Questions).filter(
+            models.Questions.id == question_id).first()
+
+        answers = db.query(models.Answers).filter(
+            models.Answers.question_id == question_id).all()
+
+    elif language == "hi":
+        question = db.query(models.HindiQuestions).filter(
+            models.HindiQuestions.id == question_id).first()
+
+        answers = db.query(models.HindiAnswers).filter(
+            models.HindiAnswers.question_id == question_id).all()
+
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Language Not Supported")
+
+    response = {"journal_id": journal_id,
+                "question": question, "answer_options": answers}
+
+    # return {"question_ids": question_id_list}
+    return response
 
 
 @router.put("/", status_code=status.HTTP_202_ACCEPTED)

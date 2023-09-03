@@ -4,8 +4,8 @@ from sqlalchemy.sql.sqltypes import TIMESTAMP
 from database import Base
 import uuid
 
-class User(Base):
-    __tablename__ = 
+# class User(Base):
+#     __tablename__ = User
 
 class Questions(Base):
     __tablename__ = "core_questiondataset"
