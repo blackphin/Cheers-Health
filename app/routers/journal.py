@@ -1,10 +1,10 @@
-from fastapi import Depends, APIRouter
+from fastapi import Depends, APIRouter, status
 from pydantic import UUID4
 from typing import List
 
 from sqlalchemy.orm import Session
 
-from database import get_db, engine
+from database import get_db
 
 import models
 import schemas
@@ -47,7 +47,7 @@ def update_journal(log_id: UUID4, db: Session = Depends(get_db)):
     return {"answered_at": answered_at.answered_at, "question_id": answered_at.question_id}
 
 
-@router.delete("/delete/{journal_id}")
+@router.delete("/delete/{journal_id}", status_code=status.HTTP_404_NOT_FOUND)
 def delete_journal(journal_id: UUID4, db: Session = Depends(get_db)):
     delete_logs = db.query(models.Journal).filter(
         models.Journal.journal_id == journal_id)

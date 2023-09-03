@@ -1,10 +1,10 @@
-from fastapi import Depends, Query, status, HTTPException, APIRouter
+from fastapi import Depends, status, APIRouter
 from pydantic import UUID4
-from typing import List, Union
+from typing import List
 
 from sqlalchemy.orm import Session
 
-from database import get_db, engine
+from database import get_db
 
 import models
 import schemas
