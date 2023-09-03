@@ -1,4 +1,4 @@
-from fastapi import Depends, Query, status, HTTPException, APIRouter
+from fastapi import Depends, APIRouter
 from pydantic import UUID4
 from typing import List
 
@@ -46,3 +46,13 @@ def update_journal(log_id: UUID4, db: Session = Depends(get_db)):
     db.commit()
 
     return {"answered_at": answered_at.answered_at, "question_id": answered_at.question_id}
+
+
+@router.delete("/delete/{journal_id}")
+def delete_journal(journal_id: UUID4, db: Session = Depends(get_db)):
+    delete_logs = db.query(models.Journal).filter(
+        models.Journal.journal_id == journal_id)
+    delete_logs.delete(synchronize_session=False)
+    db.commit()
+
+    return {"journal_id": journal_id}

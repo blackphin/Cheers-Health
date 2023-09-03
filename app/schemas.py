@@ -1,6 +1,4 @@
 from pydantic import BaseModel, UUID4
-from uuid import uuid4
-import uuid
 from typing import List, Optional
 from datetime import datetime
 
@@ -115,7 +113,6 @@ class UserJournals(BaseModel):
 
 # Response Schema for getting Journal Details
 
-
 class JournalDetails(BaseModel):
     answered_at: datetime
     log_id: UUID4
@@ -131,3 +128,15 @@ class JournalDetails(BaseModel):
 
     class config:
         orm_mode = True
+
+
+class GPTLogsDetails(BaseModel):
+    asked_at = datetime
+    user_id = UUID4
+    chat_session_id = UUID4
+    message_id = UUID4
+    query = str
+    response = str
+
+    class config:
+        orm_model = True
