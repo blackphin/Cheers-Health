@@ -31,7 +31,6 @@ def get_journal_ids(user_id: UUID4, db: Session = Depends(get_db)):
             models.Journal.journal_id == journal_id[0]).first()
         response.append(
             {"answered_at": answered_at[0], "journal_id": journal_id[0]})
-        print(response)
     return response
 
 
