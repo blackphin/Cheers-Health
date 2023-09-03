@@ -25,7 +25,6 @@ def get_journal_details(user_id: UUID4, journal_id: UUID4, db: Session = Depends
 def get_journal_ids(user_id: UUID4, db: Session = Depends(get_db)):
     journal_ids = db.query(models.Journal.journal_id).distinct().filter(
         models.Journal.user_id == user_id).all()
-    print("ok")
     response = []
     for journal_id in journal_ids:
         answered_at = db.query(models.Journal.answered_at).filter(
