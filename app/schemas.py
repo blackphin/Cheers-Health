@@ -131,12 +131,12 @@ class JournalDetails(BaseModel):
 
 
 class GPTLogsDetails(BaseModel):
-    asked_at = datetime
-    user_id = UUID4
-    chat_session_id = UUID4
-    message_id = UUID4
-    query = str
-    response = str
+    asked_at: datetime
+    user_id: UUID4
+    chat_session_id: UUID4
+    message_id: UUID4
+    query: str
+    response: str
 
     class config:
         orm_model = True
