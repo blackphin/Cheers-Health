@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine
-from routers import primary, flow, gpt, translate, journal
+from routers import primary, flow, gpt, translate, journal, gpt_journal
 
 import models
 
@@ -27,3 +27,4 @@ app.include_router(flow.router)
 app.include_router(gpt.router)
 app.include_router(translate.router)
 app.include_router(journal.router)
+app.include_router(gpt_journal.router)

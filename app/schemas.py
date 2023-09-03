@@ -129,6 +129,17 @@ class JournalDetails(BaseModel):
     class config:
         orm_mode = True
 
+# Response Schema for getting GPTLog IDs
+
+
+class UserGPTLogs(BaseModel):
+    asked_at: datetime
+    chat_session_id: UUID4
+
+    class config:
+        orm_model = True
+
+# Response Schema for getting GPTLogs details
 
 class GPTLogsDetails(BaseModel):
     asked_at: datetime
