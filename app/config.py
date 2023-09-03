@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     database_hostname: str
     database_port: str
     database_name: str
-    database_url: str
+    jwt_secret_key: str
 
     openai_api_key: str
 
