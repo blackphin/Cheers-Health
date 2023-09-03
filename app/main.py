@@ -1,7 +1,7 @@
-from fastapi import FastAPI, Depends, status
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from database import get_db, engine
+from database import engine
 from routers import primary, flow, gpt, translate, journal
 
 import models
