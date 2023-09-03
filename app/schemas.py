@@ -7,6 +7,9 @@ from datetime import datetime
 
 # REQUEST SCHEMAS
 
+# Request Schems for JWT
+class TokenData(BaseModel):
+    id: Optional[UUID4] = None
 
 # Request Schema for Getting Primary Question IDs
 
