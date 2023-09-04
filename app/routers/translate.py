@@ -1,11 +1,13 @@
 from fastapi import Depends, APIRouter
+from pydantic import UUID4
 
 from sqlalchemy.orm import Session
 
-from database import get_db, engine
+from database import get_db
 from utils import translate_text
 
 import models
+import oauth2
 
 router = APIRouter(
     prefix="/api/translate"
