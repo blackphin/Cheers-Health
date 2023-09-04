@@ -3,7 +3,7 @@ from pydantic import UUID4
 
 from sqlalchemy.orm import Session
 
-from database import get_db, engine
+from database import get_db
 from utils import gen_uuid
 from config import settings
 
