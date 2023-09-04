@@ -8,14 +8,15 @@ from database import get_db
 
 import models
 import schemas
+import oauth2
 
 router = APIRouter(
     prefix="/api/gpt-logs"
 )
 
 
-@router.get("/get/{user_id}/{chat_session_id}", response_model=List[schemas.GPTLogsDetails])
-def get_gptlogs(user_id: UUID4, chat_session_id: UUID4, db: Session = Depends(get_db)):
+@router.get("/get/{chat_session_id}", response_model=List[schemas.GPTLogsDetails])
+def get_gptlogs(chat_session_id: UUID4, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     logs = db.query(models.GPTLogs).filter(
         models.GPTLogs.chat_session_id == chat_session_id,
         models.GPTLogs.user_id == user_id
@@ -25,8 +26,8 @@ def get_gptlogs(user_id: UUID4, chat_session_id: UUID4, db: Session = Depends(ge
     return logs
 
 
-@router.get("/get/{user_id}", response_model=List[schemas.UserGPTLogs])
-def get_gptlog_id(user_id: UUID4, db: Session = Depends(get_db)):
+@router.get("/get", response_model=List[schemas.UserGPTLogs])
+def get_gptlog_id(db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     chat_session_ids = db.query(models.GPTLogs.chat_session_id).distinct().filter(
         models.GPTLogs.user_id == user_id).all()
     response = []
@@ -40,9 +41,11 @@ def get_gptlog_id(user_id: UUID4, db: Session = Depends(get_db)):
 
 
 @router.delete("/delete/{chat_session_id}", status_code=status.HTTP_404_NOT_FOUND)
-def delete_gptlogs(chat_session_id: UUID4, db: Session = Depends(get_db)):
+def delete_gptlogs(chat_session_id: UUID4, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     delete_logs = db.query(models.GPTLogs).filter(
-        models.GPTLogs.chat_session_id == chat_session_id)
+        models.GPTLogs.chat_session_id == chat_session_id,
+        models.GPTLogs.user_id == user_id
+    )
     delete_logs.delete(synchronize_session=False)
     db.commit()
 
