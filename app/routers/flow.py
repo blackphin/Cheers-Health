@@ -102,7 +102,7 @@ def gen_response(language: str, payLoad: schemas.GetAnswer, db: Session = Depend
                     progeny_question_id=recieved_answer.progeny_question_id,
                     answer_id=payLoad.answer_id,
                     question_expression=elder_question_expression,
-                    nswer_expression=recieved_answer.expression,
+                    answer_expression=recieved_answer.expression,
                     suggested_action=recieved_answer.suggested_action
                 )
             else:
