@@ -25,20 +25,34 @@ pre_prompt = "You are an AI Health Chatbot. \
     Don't mention that you are not a doctor or a medical practioner as it is already assumed."
 
 @router.post("/", response_model=schemas.GPTResponse)
-def gen_gpt_response(payLoad: schemas.GPTQuery, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
+def gen_gpt_response(
+    payLoad: schemas.GPTQuery,
+    db: Session = Depends(get_db),
+    user_id: UUID4 = Depends(oauth2.get_current_user)
+    ):
+
     if payLoad.chat_session_id is None:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
-            messages=[{"role": "system", "content": pre_prompt}, {"role": "user", "content": payLoad.query}],
+            messages=[
+                {"role": "system", "content": pre_prompt},
+                {"role": "user", "content": payLoad.query}
+            ],
             stop="bye",
         )
         chat_session_id = gen_uuid()
-        new_chat = models.GPTLogs(user_id=user_id, chat_session_id=chat_session_id,
-                                query=payLoad.query, response=response.choices[0].message.content.strip())
+        new_chat = models.GPTLogs(
+            user_id=user_id,
+            chat_session_id=chat_session_id,
+            query=payLoad.query,
+            response=response.choices[0].message.content.strip()
+            )
 
         db.add(new_chat)
         db.commit()
-        return {"chat_session_id": chat_session_id, "response": response.choices[0].message.content.strip()}
+        return {
+            "chat_session_id": chat_session_id,
+            "response": response.choices[0].message.content.strip()}
 
 
     history = db.query(models.GPTLogs).filter(models.GPTLogs.chat_session_id==payLoad.chat_session_id).all()
