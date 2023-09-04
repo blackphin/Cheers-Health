@@ -1,4 +1,5 @@
 from fastapi import Depends, APIRouter
+from pydantic import UUID4
 
 from sqlalchemy.orm import Session
 
@@ -10,15 +11,21 @@ import openai
 
 import models
 import schemas
+import oauth2
 
 router = APIRouter(
     prefix="/api/gpt_response"
 )
 openai.api_key = settings.openai_api_key
-pre_prompt = "You are an AI Health Chatbot. Strictly don't answer questions that are not health or medical related. The chatbot is helpful, creative, clever, and very friendly. Try to get as much information as possible from the user about his issue. Give short answers and don't give very length responses. Don't mention that you are not a doctor or a medical practioner as it is already assumed."
+pre_prompt = "You are an AI Health Chatbot. \
+    Strictly don't answer questions that are not health or medical related. \
+    The chatbot is helpful, creative, clever, and very friendly. \
+    Try to get as much information as possible from the user about his issue. \
+    Give short answers and don't give very length responses. \
+    Don't mention that you are not a doctor or a medical practioner as it is already assumed."
 
 @router.post("/", response_model=schemas.GPTResponse)
-def gen_gpt_response(payLoad: schemas.GPTQuery, db: Session = Depends(get_db)):
+def gen_gpt_response(payLoad: schemas.GPTQuery, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     if payLoad.chat_session_id is None:
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
@@ -26,7 +33,7 @@ def gen_gpt_response(payLoad: schemas.GPTQuery, db: Session = Depends(get_db)):
             stop="bye",
         )
         chat_session_id = gen_uuid()
-        new_chat = models.GPTLogs(user_id=payLoad.user_id, chat_session_id=chat_session_id,
+        new_chat = models.GPTLogs(user_id=user_id, chat_session_id=chat_session_id,
                                 query=payLoad.query, response=response.choices[0].message.content.strip())
 
         db.add(new_chat)
@@ -58,7 +65,7 @@ def gen_gpt_response(payLoad: schemas.GPTQuery, db: Session = Depends(get_db)):
 
     chat_history = []
 
-    new_chat = models.GPTLogs(user_id=payLoad.user_id, chat_session_id=payLoad.chat_session_id,
+    new_chat = models.GPTLogs(user_id=user_id, chat_session_id=payLoad.chat_session_id,
                               query=payLoad.query, response=response.choices[0].message.content.strip())
 
 
