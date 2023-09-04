@@ -13,7 +13,7 @@ router = APIRouter(
 
 
 @router.get("/database")
-def translate_database(db: Session = Depends(get_db)):
+def translate_database(db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     delete_logs = db.query(models.HindiQuestions)
     delete_logs.delete(synchronize_session=False)
 
