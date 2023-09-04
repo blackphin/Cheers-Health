@@ -21,7 +21,6 @@ class GetAnswer(BaseModel):
     answered_at: datetime
     answer_id: UUID4
     journal_id: UUID4
-    user_id: UUID4
     answered_at: Optional[datetime]=None
 
 # Request Schema for getting Query for generating GPT Response
@@ -29,7 +28,6 @@ class GetAnswer(BaseModel):
 
 class GPTQuery(BaseModel):
     chat_session_id: Optional[UUID4] = None
-    user_id: UUID4
     query: str
 
 
