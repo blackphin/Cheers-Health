@@ -52,10 +52,13 @@ def gen_gpt_response(
         db.commit()
         return {
             "chat_session_id": chat_session_id,
-            "response": response.choices[0].message.content.strip()}
+            "response": response.choices[0].message.content.strip()
+            }
 
 
-    history = db.query(models.GPTLogs).filter(models.GPTLogs.chat_session_id==payLoad.chat_session_id).all()
+    history = db.query(models.GPTLogs).filter(
+        models.GPTLogs.chat_session_id==payLoad.chat_session_id
+        ).all()
 
     chat_history = []
 
@@ -79,11 +82,18 @@ def gen_gpt_response(
 
     chat_history = []
 
-    new_chat = models.GPTLogs(user_id=user_id, chat_session_id=payLoad.chat_session_id,
-                              query=payLoad.query, response=response.choices[0].message.content.strip())
+    new_chat = models.GPTLogs(
+        user_id=user_id,
+        chat_session_id=payLoad.chat_session_id,
+        query=payLoad.query,
+        response=response.choices[0].message.content.strip()
+        )
 
 
     db.add(new_chat)
     db.commit()
 
-    return {"chat_session_id": payLoad.chat_session_id, "response": response.choices[0].message.content.strip()}
+    return {
+        "chat_session_id": payLoad.chat_session_id,
+        "response": response.choices[0].message.content.strip()
+        }
