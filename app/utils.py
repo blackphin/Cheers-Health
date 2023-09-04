@@ -2,6 +2,8 @@ import uuid
 from google.cloud import translate
 import openai
 
+import re
+
 from config import settings
 
 openai.api_key = settings.openai_api_key
@@ -47,3 +49,13 @@ def translate_text(text, type):
         }
     )
     return response.translations[0].translated_text
+
+def is_english(word):
+    reg = re.compile(r'[a-zA-Z]')
+
+    if reg.match(word):
+        return True
+    else:
+        return False
+
+print(is_english("आज आप कैसा महसूस कर रहे हैं?"))
