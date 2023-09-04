@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException, status, APIRouter
+from pydantic import UUID4
 
 from sqlalchemy.orm import Session
 from utils import gen_uuid
@@ -7,6 +8,7 @@ from database import get_db, engine
 
 import models
 import schemas
+import oauth2
 
 router = APIRouter(
     prefix="/api/primary_questions"
@@ -15,7 +17,7 @@ router = APIRouter(
 
 @router.get("/{language}", response_model=schemas.InitialQuestion)
 # @router.get("/", response_model=schemas.GetPrimaryQuestions)
-def get_primary_questions(language:str, db: Session = Depends(get_db)):
+def get_primary_questions(language:str, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
 
     # primary_questions = db.query(models.PrimaryQuestions.question_id).all()
     # question_id_list = []
@@ -52,7 +54,7 @@ def get_primary_questions(language:str, db: Session = Depends(get_db)):
 
 
 @router.put("/", status_code=status.HTTP_202_ACCEPTED)
-def set_primary_questions(payLoad: schemas.SetPrimaryQuestions, db: Session = Depends(get_db)):
+def set_primary_questions(payLoad: schemas.SetPrimaryQuestions, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     existing_questions = db.query(models.PrimaryQuestions).delete()
     db.commit()
 
