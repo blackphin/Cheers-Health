@@ -2,7 +2,8 @@ import gradio as gr
 import time
 import pandas as pd
 
-dataset = pd.read_excel("dataset.xlsx")
+dataset = pd.read_excel(
+    r"D:\OneDrive\Repositories\Cheers-Health\Demo\dataset2.xlsx")
 alphabet = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
 
@@ -25,12 +26,14 @@ def convert_to_dict(response, cell_no):
                  ] = response.pop(key, None)
     return response
 
+
 def gen_response(cell):
     cell_no = convert_to_no(cell)
     if (cell == "A1"):
-        cell="A2"
+        cell = "A2"
         cell_no = convert_to_no(cell)
-        response = dataset.iloc[cell_no[0]:len(dataset.index), cell_no[1]+1].dropna()
+        response = dataset.iloc[cell_no[0]:len(
+            dataset.index), cell_no[1]+1].dropna()
         response = response.to_dict()
         response_tmp = response.copy()
         for key in response_tmp.keys():
@@ -40,18 +43,19 @@ def gen_response(cell):
         # return response
         tmp = ""
         for x in response:
-            tmp+=f"{x}: {response[x]}\n"
+            tmp += f"{x}: {response[x]}\n"
         return tmp
 
-    if (cell_no[1]%2 == 0):
+    if (cell_no[1] % 2 == 0):
         # response = dataset.iloc[cell_no[0], cell_no[1]+1]
         # response = {convert_to_xl([cell_no[0], cell_no[1]+1]): response}
         response = {"Question": dataset.iloc[cell_no[0], cell_no[1]+1]}
-        next = dataset.index.where(dataset[list(dataset.columns)[cell_no[1]+1]].notna().dropna())
-        next = list(i for i in (list(next)) if i>cell_no[0])[0]
+        next = dataset.index.where(
+            dataset[list(dataset.columns)[cell_no[1]+1]].notna().dropna())
+        next = list(i for i in (list(next)) if i > cell_no[0])[0]
         options = dataset.iloc[cell_no[0]:int(next), cell_no[1]+2].dropna()
         options = convert_to_dict(options, [cell_no[0], cell_no[1]+1])
-        response["Options"]=options
+        response["Options"] = options
         # return response
         tmp = f"Question: {response['Question']}\nResponses:\n"
         for x in response["Options"].keys():

@@ -24,12 +24,13 @@ pre_prompt = "You are an AI Health Chatbot. \
     Give short answers and don't give very length responses. \
     Don't mention that you are not a doctor or a medical practioner as it is already assumed."
 
+
 @router.post("/", response_model=schemas.GPTResponse)
 def gen_gpt_response(
     payLoad: schemas.GPTQuery,
     db: Session = Depends(get_db),
     user_id: UUID4 = Depends(oauth2.get_current_user)
-    ):
+):
 
     if payLoad.chat_session_id is None:
         response = openai.ChatCompletion.create(
@@ -46,19 +47,18 @@ def gen_gpt_response(
             chat_session_id=chat_session_id,
             query=payLoad.query,
             response=response.choices[0].message.content.strip()
-            )
+        )
 
         db.add(new_chat)
         db.commit()
         return {
             "chat_session_id": chat_session_id,
             "response": response.choices[0].message.content.strip()
-            }
-
+        }
 
     history = db.query(models.GPTLogs).filter(
-        models.GPTLogs.chat_session_id==payLoad.chat_session_id
-        ).all()
+        models.GPTLogs.chat_session_id == payLoad.chat_session_id
+    ).all()
 
     chat_history = []
 
@@ -70,7 +70,7 @@ def gen_gpt_response(
 
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages = chat_history,
+        messages=chat_history,
         # temperature=0.9,
         # max_tokens=150,
         # frequency_penalty=0,
@@ -87,8 +87,7 @@ def gen_gpt_response(
         chat_session_id=payLoad.chat_session_id,
         query=payLoad.query,
         response=response.choices[0].message.content.strip()
-        )
-
+    )
 
     db.add(new_chat)
     db.commit()
@@ -96,4 +95,4 @@ def gen_gpt_response(
     return {
         "chat_session_id": payLoad.chat_session_id,
         "response": response.choices[0].message.content.strip()
-        }
+    }
