@@ -4,8 +4,9 @@ from sqlalchemy.sql.sqltypes import TIMESTAMP
 from database import Base
 import uuid
 
+
 class Questions(Base):
-    __tablename__ = "core_questiondataset"
+    __tablename__ = "english_questiondataset"
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
@@ -29,7 +30,7 @@ class HindiQuestions(Base):
 
 
 class Answers(Base):
-    __tablename__ = "core_answerdataset"
+    __tablename__ = "english_answerdataset"
 
     created_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text('now()'))
