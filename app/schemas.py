@@ -11,6 +11,7 @@ class TokenData(BaseModel):
 
 # Request Schema for Getting Primary Question IDs
 
+
 class SetPrimaryQuestions(BaseModel):
     question_ids: List[UUID4]
 
@@ -21,7 +22,7 @@ class GetAnswer(BaseModel):
     answered_at: datetime
     answer_id: UUID4
     journal_id: UUID4
-    answered_at: Optional[datetime]=None
+    answered_at: Optional[datetime] = None
 
 # Request Schema for getting Query for generating GPT Response
 
@@ -138,6 +139,7 @@ class UserGPTLogs(BaseModel):
         orm_model = True
 
 # Response Schema for getting GPTLogs details
+
 
 class GPTLogsDetails(BaseModel):
     asked_at: datetime
