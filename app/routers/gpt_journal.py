@@ -1,6 +1,7 @@
+from typing import List
 from fastapi import Depends, status, APIRouter
 from pydantic import UUID4
-from typing import List
+
 
 from sqlalchemy.orm import Session
 
@@ -16,7 +17,11 @@ router = APIRouter(
 
 
 @router.get("/get/{chat_session_id}", response_model=List[schemas.GPTLogsDetails])
-def get_gptlogs(chat_session_id: UUID4, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
+def get_gptlogs(
+    chat_session_id: UUID4,
+    db: Session = Depends(get_db),
+    user_id: UUID4 = Depends(oauth2.get_current_user)
+):
     logs = db.query(models.GPTLogs).filter(
         models.GPTLogs.chat_session_id == chat_session_id,
         models.GPTLogs.user_id == user_id
@@ -41,7 +46,11 @@ def get_gptlog_id(db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2
 
 
 @router.delete("/delete/{chat_session_id}", status_code=status.HTTP_404_NOT_FOUND)
-def delete_gptlogs(chat_session_id: UUID4, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
+def delete_gptlogs(
+    chat_session_id: UUID4,
+    db: Session = Depends(get_db),
+    user_id: UUID4 = Depends(oauth2.get_current_user)
+):
     delete_logs = db.query(models.GPTLogs).filter(
         models.GPTLogs.chat_session_id == chat_session_id,
         models.GPTLogs.user_id == user_id
