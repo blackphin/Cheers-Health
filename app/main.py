@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine
-from routers import primary, flow, gpt, translate, journal, gpt_journal
+from routers import primary, flow, gpt, translate, journal, gpt_journal, auth
 
 import models
 
@@ -22,6 +22,7 @@ app.add_middleware(
 
 models.Base.metadata.create_all(bind=engine)
 
+app.include_router(auth.router)
 app.include_router(primary.router)
 app.include_router(flow.router)
 app.include_router(gpt.router)
