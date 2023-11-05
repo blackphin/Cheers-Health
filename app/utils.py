@@ -1,4 +1,5 @@
 import uuid
+from passlib.context import CryptContext
 from google.cloud import translate
 import openai
 
@@ -9,8 +10,19 @@ from config import settings
 openai.api_key = settings.openai_api_key
 
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
 def gen_uuid():
     return uuid.uuid4()
+
+
+def hash_pass(password: str):
+    return pwd_context.hash(password)
+
+
+def verify(plain_password, hashed_password):
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 def translate_text(text, type):
@@ -35,20 +47,21 @@ def translate_text(text, type):
     #     )
     # else:
     #     paraphrased_text = text
-    project_id="cheers-wisdom-translate"
-    client=translate.TranslationServiceClient()
-    location="global"
-    parent=f"projects/{project_id}/locations/{location}"
-    response=client.translate_text(
-        request={
-            "parent": parent,
-            "contents": [text],
-            "mime_type": "text/plain",
-            "source_language_code": "en-US",
-            "target_language_code": "hi",
-        }
-    )
-    return response.translations[0].translated_text
+    project_id = "cheers-wisdom-translate"
+    client = translate.TranslationServiceClient()
+    location = "global"
+    parent = f"projects/{project_id}/locations/{location}"
+    # response=client.translate_text(
+    #     request={
+    #         "parent": parent,
+    #         "contents": [text],
+    #         "mime_type": "text/plain",
+    #         "source_language_code": "en-US",
+    #         "target_language_code": "hi",
+    #     }
+    # )
+    # return response.translations[0].translated_text
+
 
 def is_english(word):
     reg = re.compile(r'[a-zA-Z]')
@@ -57,5 +70,3 @@ def is_english(word):
         return True
     else:
         return False
-
-print(is_english("आज आप कैसा महसूस कर रहे हैं?"))
