@@ -2,14 +2,11 @@ from datetime import datetime, timedelta
 
 from jose import JWTError, jwt
 
-
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
+from pydantic import UUID4
 
-import schemas_request
-import database
-import models
+import schemas
 from config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
@@ -28,13 +25,13 @@ def verify_access_token(token: str):
     try:
         payload = jwt.decode(token, settings.secret_key,
                              algorithms=[settings.algorithm])
-        if payload.get("reg_no") is not None:
-            reg_no: str = payload.get("reg_no")
-            if reg_no is None:
+        if payload.get("is") is not None:
+            id: UUID4 = payload.get("id")
+            if id is None:
                 raise HTTPException(
                     status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials", headers={"WWW-Authenticate": "Bearer"}
                 )
-            token_data = schemas_request.TokenData(reg_no=reg_no)
+            token_data = schemas.TokenData(id=id)
     except JWTError as exc:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Couldn't Verify JWT", headers={"WWW-Authenticate": "Bearer"}
@@ -44,10 +41,8 @@ def verify_access_token(token: str):
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     token_data = verify_access_token(token)
-    # user = db.query(models.MasterStudentsPersonal).filter(
-    #     models.MasterStudentsPersonal.reg_no == token_data.reg_no).first()
-    if token_data.reg_no is None:
+    if token_data.id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials", headers={"WWW-Authenticate": "Bearer"}
         )
-    return token_data.reg_no
+    return token_data.id
