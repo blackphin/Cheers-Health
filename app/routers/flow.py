@@ -3,7 +3,7 @@ from pydantic import UUID4
 
 from sqlalchemy.orm import Session
 
-from database import get_db, engine
+from database import get_db
 from utils import gen_uuid
 
 import models
@@ -16,7 +16,12 @@ router = APIRouter(
 
 
 @router.get("/{language}/{question_id}", response_model=schemas.InitialQuestion)
-def get_questions(question_id: UUID4, language: str, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
+def get_questions(
+    question_id: UUID4,
+    language: str,
+    db: Session = Depends(get_db),
+    user_id: UUID4 = Depends(oauth2.get_current_user)
+):
     journal_id = gen_uuid()
     if language == "en":
         question = db.query(models.Questions).filter(
@@ -43,7 +48,12 @@ def get_questions(question_id: UUID4, language: str, db: Session = Depends(get_d
 
 
 @router.post("/{language}", response_model=schemas.QuestionAnswers)
-def gen_response(language: str, payLoad: schemas.GetAnswer, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
+def gen_response(
+    language: str,
+    payLoad: schemas.GetAnswer,
+    db: Session = Depends(get_db),
+    user_id: UUID4 = Depends(oauth2.get_current_user)
+):
     if language == "en":
         recieved_answer = db.query(models.Answers).filter(
             models.Answers.id == payLoad.answer_id).first()
