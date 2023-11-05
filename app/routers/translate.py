@@ -10,7 +10,7 @@ import models
 import oauth2
 
 router = APIRouter(
-    prefix="/api/translate"
+    tags=['Utils'], prefix="/api/translate"
 )
 
 

@@ -10,12 +10,12 @@ import models
 import schemas
 import oauth2
 
-router  =  APIRouter(
-    prefix = "/api/get_question"
+router = APIRouter(
+    tags=['Journal'], prefix="/api/get_question"
 )
 
 
-@router.get("/{language}/{question_id}", response_model = schemas.InitialQuestion)
+@router.get("/{language}/{question_id}", response_model=schemas.InitialQuestion)
 def get_questions(question_id: UUID4, language: str, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     journal_id = gen_uuid()
     if language == "en":
@@ -34,7 +34,7 @@ def get_questions(question_id: UUID4, language: str, db: Session = Depends(get_d
 
     else:
         raise HTTPException(
-            status_code = status.HTTP_400_BAD_REQUEST, detail="Language Not Supported")
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Language Not Supported")
 
     response = {"journal_id": journal_id,
                 "question": question, "answer_options": answers}
@@ -185,7 +185,7 @@ def gen_response(language: str, payLoad: schemas.GetAnswer, db: Session = Depend
             else:
                 journal = models.Journal(
                     answered_at=payLoad.answered_at,
-                    log_id = gen_uuid(),
+                    log_id=gen_uuid(),
                     journal_id=payLoad.journal_id,
                     user_id=user_id,
                     score=recieved_answer.score,

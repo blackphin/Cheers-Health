@@ -11,7 +11,7 @@ import schemas
 import oauth2
 
 router = APIRouter(
-    prefix="/api/gpt_logs"
+    tags=['GPT'], prefix="/api/gpt_logs"
 )
 
 

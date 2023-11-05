@@ -1,3 +1,4 @@
+from sys import prefix
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -8,7 +9,11 @@ import models
 
 
 app = FastAPI(
-    title="Cheers Wisdom Chatbot"
+    title="Health Chatbot",
+    # root_path="/api",
+    openapi_url="/api/openapi.json",
+    docs_url="/api/docs",
+    redoc_url="/api/redoc"
 )
 origins = ['*']
 

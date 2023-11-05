@@ -12,7 +12,7 @@ import oauth2
 from utils import is_english
 
 router = APIRouter(
-    prefix="/api/journal"
+    tags=['Journal'], prefix="/api/journal"
 )
 
 
@@ -24,8 +24,7 @@ def get_journal_details(
 ):
 
     journals = db.query(models.Journal).filter(
-        models.Journal.journal_id == journal_id, models.Journal.user_id == user_id).order_by(models.Journal.answered_at
-    ).all()
+        models.Journal.journal_id == journal_id, models.Journal.user_id == user_id).order_by(models.Journal.answered_at).all()
     return journals
 
 
@@ -47,7 +46,8 @@ def get_journal_ids(
         )
     return response
 
-@router.put("/update/{log_id}", response_model = Optional[List[schemas.AnswerOptions]])
+
+@router.put("/update/{log_id}", response_model=Optional[List[schemas.AnswerOptions]])
 def update_journal(log_id: UUID4, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
     answered_at = db.query(
         models.Journal.answered_at,
@@ -65,9 +65,11 @@ def update_journal(log_id: UUID4, db: Session = Depends(get_db), user_id: UUID4 
     delete_logs.delete(synchronize_session=False)
     db.commit()
     if (is_english(answered_at.answer_expression)):
-        answers = db.query(models.Answers).filter(models.Answers.question_id == answered_at.question_id).all()
+        answers = db.query(models.Answers).filter(
+            models.Answers.question_id == answered_at.question_id).all()
     else:
-        answers = db.query(models.HindiAnswers).filter(models.HindiAnswers.question_id == answered_at.question_id).all()
+        answers = db.query(models.HindiAnswers).filter(
+            models.HindiAnswers.question_id == answered_at.question_id).all()
 
     return answers
 

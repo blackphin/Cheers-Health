@@ -11,13 +11,13 @@ import schemas
 import oauth2
 
 router = APIRouter(
-    prefix="/api/primary_questions"
+    tags=['Utils'], prefix="/api/primary_questions"
 )
 
 
 @router.get("/{language}", response_model=schemas.InitialQuestion)
 # @router.get("/", response_model=schemas.GetPrimaryQuestions)
-def get_primary_questions(language:str, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
+def get_primary_questions(language: str, db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2.get_current_user)):
 
     # primary_questions = db.query(models.PrimaryQuestions.question_id).all()
     # question_id_list = []
