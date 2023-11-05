@@ -17,7 +17,7 @@ class CreateUser(BaseModel):
 # Request Schema for JWT
 
 class TokenData(BaseModel):
-    id: Optional[UUID4] = None
+    user_id: Optional[UUID4] = None
 
 
 # Request Schema for Getting Primary Question IDs
