@@ -1,8 +1,24 @@
 from sqlalchemy import Column, Integer, String, Text, VARCHAR, ARRAY, Uuid
 from sqlalchemy.sql.expression import text
 from sqlalchemy.sql.sqltypes import TIMESTAMP
+from datetime import datetime
+
 from database import Base
+from config import settings
 import uuid
+
+
+class Users(Base):
+    __tablename__ = "users"
+
+    id = Column(Uuid(as_uuid=True),
+                nullable=False, default=uuid.uuid4)
+    status = Column(Text, nullable=False, default="active")
+    first_name = Column(Text, nullable=False)
+    last_name = Column(Text, nullable=False)
+    email = Column(Text, primary_key=True, nullable=False)
+    phone = Column(Text, nullable=False)
+    password = Column(Text, nullable=False)
 
 
 class Questions(Base):
