@@ -5,6 +5,14 @@ from datetime import datetime
 
 # REQUEST SCHEMAS
 
+# Request Schema for Creating Account
+class CreateUser(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    phone: str
+    password: str
+
 
 # Request Schema for JWT
 
