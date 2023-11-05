@@ -1,22 +1,24 @@
-from pydantic import BaseModel, UUID4
+from pydantic import BaseModel, UUID4, EmailStr
 from typing import List, Optional
 from datetime import datetime
 
 
 # REQUEST SCHEMAS
 
-# Request Schems for JWT
+
+# Request Schema for JWT
+
 class TokenData(BaseModel):
     id: Optional[UUID4] = None
 
-# Request Schema for Getting Primary Question IDs
 
+# Request Schema for Getting Primary Question IDs
 
 class SetPrimaryQuestions(BaseModel):
     question_ids: List[UUID4]
 
-# Request Schema for Getting Answer ID
 
+# Request Schema for Getting Answer ID
 
 class GetAnswer(BaseModel):
     answered_at: datetime
@@ -24,8 +26,8 @@ class GetAnswer(BaseModel):
     journal_id: UUID4
     answered_at: Optional[datetime] = None
 
-# Request Schema for getting Query for generating GPT Response
 
+# Request Schema for getting Query for generating GPT Response
 
 class GPTQuery(BaseModel):
     chat_session_id: Optional[UUID4] = None
@@ -33,6 +35,11 @@ class GPTQuery(BaseModel):
 
 
 # RESPONSE SCHEMAS
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
 
 class GetPrimaryQuestions(BaseModel):
     question_ids: List[UUID4]
