@@ -78,8 +78,6 @@ def gen_gpt_response(
         stop="bye",
     )
 
-    print(response.choices[0].message.role)
-
     chat_history = []
 
     new_chat = models.GPTLogs(

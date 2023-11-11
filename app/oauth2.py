@@ -41,7 +41,6 @@ def verify_access_token(token: str):
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
     token_data = verify_access_token(token)
-    print(token_data)
     if token_data.user_id is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Credentials", headers={"WWW-Authenticate": "Bearer"}

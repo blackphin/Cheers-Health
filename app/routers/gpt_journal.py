@@ -41,7 +41,6 @@ def get_gptlog_id(db: Session = Depends(get_db), user_id: UUID4 = Depends(oauth2
             models.GPTLogs.chat_session_id == chat_session_id[0]).first()
         response.append(
             {"asked_at": asked_at[0], "chat_session_id": chat_session_id[0]})
-        print(response)
     return response
 
 
