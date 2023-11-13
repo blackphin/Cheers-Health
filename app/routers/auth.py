@@ -11,7 +11,7 @@ import oauth2
 router = APIRouter(tags=['Authentication'], prefix='/api/auth')
 
 
-@router.get('/login', response_model=schemas.Token)
+@router.put('/login', response_model=schemas.Token)
 def login(
     user_credentials: OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(database.get_db)
