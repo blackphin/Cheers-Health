@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import Depends, status, APIRouter
 from pydantic import UUID4
-
+from utils import summarize
 
 from sqlalchemy.orm import Session
 
@@ -16,7 +16,7 @@ router = APIRouter(
 )
 
 
-@router.get("/get/{chat_session_id}", response_model=List[schemas.GPTLogsDetails])
+@router.get("/get/{chat_session_id}")
 def get_gptlogs(
     chat_session_id: UUID4,
     db: Session = Depends(get_db),
@@ -26,8 +26,12 @@ def get_gptlogs(
         models.GPTLogs.chat_session_id == chat_session_id,
         models.GPTLogs.user_id == user_id
     ).order_by(
-        models.GPTLogs.asked_at
+        models.GPTLogs.asked_at.asc()
     ).all()
+    chat = ""
+    for log in logs:
+        chat+= f"User: {log.query}\nChat Bot: {log.response}\n"
+    logs.append({"summary": summarize(chat)})
     return logs
 
 
