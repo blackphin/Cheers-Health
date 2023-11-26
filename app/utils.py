@@ -4,9 +4,9 @@ from google.cloud import translate
 from openai import OpenAI
 import re
 
-# from config import settings
+from config import settings
 
-client = OpenAI(api_key = "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")
+client = OpenAI(api_key = settings.openai_api_key)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
