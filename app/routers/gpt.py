@@ -69,7 +69,7 @@ def gen_gpt_response(
 
     chat_history.append({"role": "user", "content": payLoad.query})
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=chat_history,
         # temperature=0.9,
