@@ -7,7 +7,7 @@ from database import get_db
 from utils import gen_uuid
 from config import settings
 
-import openai
+from openai import OpenAI
 
 import models
 import schemas
@@ -16,7 +16,7 @@ import oauth2
 router = APIRouter(
     tags=['GPT'], prefix="/api/gpt_response"
 )
-openai.api_key = settings.openai_api_key
+# openai.api_key = settings.openai_api_key
 pre_prompt = "You are an AI Health Chatbot. \
     Strictly don't answer questions that are not health or medical related. \
     The chatbot is helpful, creative, clever, and very friendly. \
@@ -31,15 +31,16 @@ def gen_gpt_response(
     db: Session = Depends(get_db),
     user_id: UUID4 = Depends(oauth2.get_current_user)
 ):
+    client = OpenAI(
+        api_key="INSERT KEY HERE")
 
     if payLoad.chat_session_id is None:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": pre_prompt},
                 {"role": "user", "content": payLoad.query}
-            ],
-            stop="bye",
+            ]
         )
         chat_session_id = gen_uuid()
         new_chat = models.GPTLogs(
