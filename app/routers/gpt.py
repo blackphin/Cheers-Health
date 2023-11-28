@@ -32,7 +32,7 @@ def gen_gpt_response(
     user_id: UUID4 = Depends(oauth2.get_current_user)
 ):
     client = OpenAI(
-        api_key="INSERT KEY HERE")
+        api_key=settings.openai_api_key)
 
     if payLoad.chat_session_id is None:
         response = client.chat.completions.create(
