@@ -14,7 +14,8 @@ app = FastAPI(
     docs_url="/api/docs",
     redoc_url="/api/redoc"
 )
-origins = ['*']
+origins = ["http://127.0.0.1:5173",
+           "http://127.0.0.1:8000", "https://cap.srmap.edu.in"]
 
 app.add_middleware(
     CORSMiddleware,
