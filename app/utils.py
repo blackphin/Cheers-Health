@@ -6,7 +6,7 @@ import re
 
 from config import settings
 
-client = OpenAI(api_key = settings.openai_api_key)
+client = OpenAI(api_key=settings.openai_api_key)
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -69,12 +69,13 @@ def is_english(word):
     else:
         return False
 
+
 def summarize(text):
     from openai import OpenAI
     response = client.chat.completions.create(
-    model="gpt-4",
-    messages=[
-        {"role": "system", "content": "Summarize the following chat between a User and a Health Chatbot into a single paragraph to send it to the user's doctor so that he knows what the user's issue is."},
-        {"role": "user", "content": text}
-    ])
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "Summarize the following chat between a User and a Health Chatbot into a single paragraph to send it to the user's doctor so that he knows what the user's issue is."},
+            {"role": "user", "content": text}
+        ])
     return response.choices[0].message.content.strip()
