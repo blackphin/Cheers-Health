@@ -3,7 +3,7 @@ import time
 import pandas as pd
 
 dataset = pd.read_excel(
-    r"D:\OneDrive\Repositories\Health-Chatbot\Demo\dataset2.xlsx")
+    r"D:\OneDrive\Repositories\Health-Chatbot\Demo\breast_cancer.xlsx")
 alphabet = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
 
 
@@ -88,4 +88,4 @@ with gr.Blocks() as demo:
     msg.submit(respond, [msg, chatbot], [msg, chatbot])
 
 
-demo.launch()
+demo.launch(share=True)
